@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sidecar Pattern - Demostración Interactiva de Microservicios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Patrón Sidecar (Sidecar Pattern)</h1>
+          <p class="subtitle">Arquitectura de Microservicios Desacoplada</p>
+        </div>
+      </div>
+      <div class="system-status" style="display: flex; gap: 1rem; align-items: center;">
+        <a href="/simple.html" style="text-decoration: none; padding: 0.4rem 0.9rem; font-size: 0.85rem; background: rgba(0, 242, 254, 0.15); border: 1px solid rgba(0, 242, 254, 0.3); color: var(--accent-cyan); border-radius: 8px; font-weight: 500;">🛒 Abrir Tienda Sencilla</a>
+        <span class="status-badge pulse-green" id="appStatus">
+          <span class="dot"></span> Sidecar & Main App Activos
+        </span>
+      </div>
+    </header>
+
+    <!-- Content Grid -->
+    <main class="grid-layout">
+      <!-- Top Row: Interactive Architecture Diagram -->
+      <section class="card diagram-card">
+        <div class="card-header">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+            Diagrama Vivo de Arquitectura Sidecar
+          </h2>
+          <span class="tag">Localhost Co-location</span>
+        </div>
+
+        <div class="topology-container">
+          <!-- Client Node -->
+          <div class="node node-client" id="nodeClient">
+            <div class="node-icon">💻</div>
+            <div class="node-title">Cliente / Frontend</div>
+            <div class="node-subtitle">Peticiones Web / API</div>
+          </div>
+
+          <!-- Connection Arrow 1 -->
+          <div class="arrow-container" id="arrowClientSidecar">
+            <div class="arrow-line"></div>
+            <div class="data-packet" id="packet1"></div>
+            <span class="arrow-label">HTTP Proxy (Port 3001)</span>
+          </div>
+
+          <!-- Container Pod Boundary -->
+          <div class="pod-boundary">
+            <div class="pod-header">📦 Mismo Pod / Servidor (Host Local)</div>
+            <div class="pod-services">
+              <!-- Sidecar Node -->
+              <div class="node node-sidecar" id="nodeSidecar">
+                <div class="node-badge">Sidecar Agent</div>
+                <div class="node-icon">🛡️</div>
+                <div class="node-title">Sidecar Service</div>
+                <div class="node-subtitle">Puerto :3001</div>
+                <div class="node-features">
+                  <span>Tracing ID</span>
+                  <span>Rate Limiter</span>
+                  <span>Metrics</span>
+                </div>
+              </div>
+
+              <!-- Connection Arrow 2 -->
+              <div class="arrow-container inner-arrow" id="arrowSidecarMain">
+                <div class="arrow-line"></div>
+                <div class="data-packet" id="packet2"></div>
+                <span class="arrow-label">Loopback (:3000)</span>
+              </div>
+
+              <!-- Main Service Node -->
+              <div class="node node-main" id="nodeMain">
+                <div class="node-badge main-badge">App Principal</div>
+                <div class="node-icon">⚡</div>
+                <div class="node-title">Main Application</div>
+                <div class="node-subtitle">Puerto :3000</div>
+                <div class="node-features">
+                  <span>Lógica de Negocio</span>
+                  <span>Órdenes & Stock</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Middle Left: Control Panel & Request Tester -->
+      <section class="card controls-card">
+        <div class="card-header">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Consola de Pruebas & Disparador
+          </h2>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="btnGetProducts">
+            <span class="btn-icon">📦</span> GET /api/products (Vía Sidecar :3001)
+          </button>
+          <button class="btn btn-secondary" id="btnCreateOrder">
+            <span class="btn-icon">🛒</span> POST /api/orders (Vía Sidecar :3001)
+          </button>
+          <button class="btn btn-warning" id="btnDirectMain">
+            <span class="btn-icon">⚠️</span> GET /api/products (Directo a App :3000)
+          </button>
+          <button class="btn btn-danger" id="btnBurstTraffic">
+            <span class="btn-icon">⚡</span> Ráfaga de Tráfico (Probar Rate Limiter)
+          </button>
+        </div>
+
+        <div class="sidecar-toggles">
+          <h3>Interruptores del Sidecar (Features Live)</h3>
+          <div class="toggle-group">
+            <label class="toggle">
+              <input type="checkbox" id="toggleTracing" checked>
+              <span class="slider"></span>
+              <span class="toggle-label">Inyección de Trace ID (X-Trace-ID)</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="toggleRateLimit" checked>
+              <span class="slider"></span>
+              <span class="toggle-label">Rate Limiter (Máx 10 req / 10s)</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="toggleSecurity" checked>
+              <span class="slider"></span>
+              <span class="toggle-label">Headers de Seguridad (X-Frame-Options, etc)</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Middle Right: Real-time Telemetry & Metrics -->
+      <section class="card metrics-card">
+        <div class="card-header">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Métricas del Sidecar en Tiempo Real
+          </h2>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <span class="metric-value" id="mTotal">0</span>
+            <span class="metric-label">Peticiones Procesadas</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-value text-green" id="mSuccess">0</span>
+            <span class="metric-label">Exitosas (2xx)</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-value text-red" id="mRateLimited">0</span>
+            <span class="metric-label">Bloqueadas (Rate Limit)</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-value text-purple" id="mAvgLatency">0 ms</span>
+            <span class="metric-label">Latencia Promedio</span>
+          </div>
+        </div>
+
+        <div class="service-health-box">
+          <div class="health-item">
+            <span>Salud de App Principal:</span>
+            <span class="badge badge-success" id="mainHealthStatus">HEALTHY</span>
+          </div>
+          <div class="health-item">
+            <span>Puerto Sidecar Proxy:</span>
+            <span class="badge badge-info">:3001</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom Row: Real-time Inspector & Live Stream Logs -->
+      <section class="card logs-card">
+        <div class="card-header">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            Inspector de Tráfico & Stream de Eventos del Sidecar
+          </h2>
+          <button class="btn-sm" id="btnClearLogs">Limpiar Logs</button>
+        </div>
+
+        <div class="logs-container" id="logsContainer">
+          <div class="log-entry system-log">
+            <span class="time">[SISTEMA]</span>
+            <span class="msg">Conectando con el stream del Sidecar SSE en directo...</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom Response Modal / Card -->
+      <section class="card response-card">
+        <div class="card-header">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Respuesta HTTP & Headers Inyectados por el Sidecar
+          </h2>
+          <span class="status-code-badge" id="responseStatus">-</span>
+        </div>
+        <div class="response-headers" id="responseHeadersContainer">
+          <em>Haz clic en alguna de las acciones de prueba para inspeccionar la respuesta y los encabezados inyectados por el Sidecar.</em>
+        </div>
+        <pre class="json-code" id="responseJson">// Esperando petición...</pre>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

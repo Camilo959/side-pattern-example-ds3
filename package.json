@@ -1,0 +1,25 @@
+{
+  "name": "microservicio-sidecar-pattern",
+  "version": "1.0.0",
+  "description": "Demostración interactiva y completa del patrón Sidecar en Microservicios con Node.js y Express",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "main-service": "node main-service/app.js",
+    "sidecar-service": "node sidecar-service/sidecar.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "sidecar-pattern",
+    "microservices",
+    "nodejs",
+    "express",
+    "architecture"
+  ],
+  "author": "Antigravity AI",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  }
+}

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --accent-blue: #38bdf8;
+      --accent-green: #4ade80;
+      --accent-purple: #c084fc;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header Navbar */
+    header {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .logo-icon {
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .nav-link-btn {
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      background: rgba(56, 189, 248, 0.1);
+      transition: all 0.2s;
+    }
+
+    .nav-link-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+    }
+
+    /* Hero Banner */
+    .hero {
+      text-align: center;
+      padding: 2.5rem 1rem 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, #38bdf8, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Proxy Mode Switcher */
+    .mode-banner {
+      max-width: 1100px;
+      margin: 0 auto 1.5rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mode-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .badge-proxy {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .switch-mode-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .switch-mode-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Container Main */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem;
+      flex: 1;
+    }
+
+    /* Catalog Grid */
+    .catalog-title {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .product-emoji {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1rem;
+      border-radius: 12px;
+    }
+
+    .product-name {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .product-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .product-stock {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .quantity-select {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 0.5rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      width: 60px;
+    }
+
+    .btn-buy {
+      flex: 1;
+      background: linear-gradient(135deg, var(--accent-blue), #2563eb);
+      color: #fff;
+      border: none;
+      padding: 0.65rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-buy:hover {
+      opacity: 0.9;
+    }
+
+    /* Orders Section */
+    .orders-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .orders-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .order-item {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .order-id {
+      font-family: monospace;
+      color: var(--accent-purple);
+      font-weight: 600;
+    }
+
+    /* Floating Toast / Inspector Sidecar */
+    .toast-sidecar {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid var(--accent-blue);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      max-width: 380px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+      transform: translateY(150%);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
+    }
+
+    .toast-sidecar.show {
+      transform: translateY(0);
+    }
+
+    .toast-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--accent-blue);
+    }
+
+    .toast-body {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .toast-tag {
+      font-family: monospace;
+      color: var(--accent-green);
+      background: rgba(74, 222, 128, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🛒</div>
+      <span>TechStore Express</span>
+    </div>
+    <div class="nav-links">
+      <a href="/index.html" class="nav-link-btn">📊 Abrir Dashboard de Arquitectura Sidecar</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Tienda</h1>
+    <p>Esta interfaz interactúa directamente con los microservicios. Todas las peticiones pasan a través del <strong>Sidecar Proxy (Puerto 3001)</strong> para inyección de seguridad y trazabilidad.</p>
+  </div>
+
+  <!-- Mode Selector Banner -->
+  <div class="mode-banner">
+    <div class="mode-info">
+      <span>Ruta de Enrutamiento Actual:</span>
+      <span class="badge-proxy" id="modeBadge">🛡️ Vía Sidecar Proxy (http://localhost:3001)</span>
+    </div>
+    <button class="switch-mode-btn" id="btnToggleMode">Cambiar a Petición Directa (:3000)</button>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <h2 class="catalog-title">📦 Catálogo de Productos</h2>
+    <div class="product-grid" id="productGrid">
+      <div style="color: var(--text-muted); grid-column: span 3;">Cargando catálogo desde la API...</div>
+    </div>
+
+    <!-- Orders -->
+    <div class="orders-section">
+      <h3>📋 Registro de Órdenes Realizadas</h3>
+      <div class="orders-list" id="ordersList">
+        <div style="color: var(--text-muted); font-size: 0.85rem;">No has realizado órdenes aún. ¡Haz clic en "Comprar" en algún producto!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Sidecar -->
+  <div class="toast-sidecar" id="sidecarToast">
+    <div class="toast-header">
+      <span>🛡️ Interceptado por Sidecar</span>
+      <span id="toastStatus">HTTP 200</span>
+    </div>
+    <div class="toast-body" id="toastContent">
+      Procesando petición...
+    </div>
+  </div>
+
+  <script>
+    let useSidecar = true;
+    let SIDECAR_URL = 'http://localhost:3001';
+    let MAIN_APP_URL = 'http://localhost:3000';
+
+    const productGrid = document.getElementById('productGrid');
+    const ordersList = document.getElementById('ordersList');
+    const btnToggleMode = document.getElementById('btnToggleMode');
+    const modeBadge = document.getElementById('modeBadge');
+    const sidecarToast = document.getElementById('sidecarToast');
+    const toastStatus = document.getElementById('toastStatus');
+    const toastContent = document.getElementById('toastContent');
+
+    const productEmojis = {
+      101: '💻',
+      102: '🖥️',
+      103: '⌨️',
+      104: '🖱️'
+    };
+
+    function getBaseUrl() {
+      return useSidecar ? SIDECAR_URL : MAIN_APP_URL;
+    }
+
+    btnToggleMode.addEventListener('click', () => {
+      useSidecar = !useSidecar;
+      if (useSidecar) {
+        modeBadge.className = 'badge-proxy';
+        modeBadge.textContent = '🛡️ Vía Sidecar Proxy (http://localhost:3001)';
+        btnToggleMode.textContent = 'Cambiar a Petición Directa (:3000)';
+      } else {
+        modeBadge.className = 'badge-proxy';
+        modeBadge.style.background = 'rgba(234, 179, 8, 0.15)';
+        modeBadge.style.color = '#eab308';
+        modeBadge.style.borderColor = 'rgba(234, 179, 8, 0.3)';
+        modeBadge.textContent = '⚠️ Petición Directa a App Principal (http://localhost:3000)';
+        btnToggleMode.textContent = 'Cambiar a Vía Sidecar (:3001)';
+      }
+      loadProducts();
+    });
+
+    async function loadProducts() {
+      try {
+        const res = await fetch(`${getBaseUrl()}/api/products`);
+        const result = await res.json();
+        
+        // Mostrar toast con los datos interceptados por Sidecar
+        const traceId = res.headers.get('x-trace-id') || 'Sin Trace-ID (Directo a Main)';
+        const latency = res.headers.get('x-sidecar-latency-ms') || 'N/A';
+
+        showToast(res.status, `
+          <strong>Endpoint:</strong> GET /api/products<br>
+          <strong>Trazabilidad:</strong> <span class="toast-tag">${traceId}</span><br>
+          <strong>Latencia Sidecar:</strong> ${latency} ms
+        `);
+
+        if (result.success && result.data) {
+          renderProducts(result.data);
+        }
+      } catch (e) {
+        productGrid.innerHTML = `<div style="color: #ef4444; grid-column: span 3;">Error cargando productos. Verifica que los servicios estén iniciados.</div>`;
+      }
+    }
+
+    function renderProducts(products) {
+      productGrid.innerHTML = '';
+      products.forEach(p => {
+        const emoji = productEmojis[p.id] || '📦';
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div>
+            <div class="product-emoji">${emoji}</div>
+            <div class="product-name">${p.name}</div>
+            <div class="product-price">$${p.price.toFixed(2)}</div>
+            <div class="product-stock">Stock disponible: <strong>${p.stock}</strong> unidades</div>
+          </div>
+          <div class="card-actions">
+            <select class="quantity-select" id="qty-${p.id}">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+            <button class="btn-buy" onclick="buyProduct(${p.id})">Comprar Ahora</button>
+          </div>
+        `;
+        productGrid.appendChild(card);
+      });
+    }
+
+    async function buyProduct(productId) {
+      const qtySelect = document.getElementById(`qty-${productId}`);
+      const quantity = parseInt(qtySelect.value, 10);
+
+      try {
+        const res = await fetch(`${getBaseUrl()}/api/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId, quantity })
+        });
+
+        const data = await res.json();
+        const traceId = res.headers.get('x-trace-id') || 'Sin Trace-ID (Directo a Main)';
+        const latency = res.headers.get('x-sidecar-latency-ms') || 'N/A';
+
+        if (res.ok && data.success) {
+          showToast(res.status, `
+            <strong>Orden Creada:</strong> ${data.order.id}<br>
+            <strong>Producto:</strong> ${data.order.productName} (x${data.order.quantity})<br>
+            <strong>Trace-ID Sidecar:</strong> <span class="toast-tag">${traceId}</span>
+          `);
+          addOrderToHistory(data.order);
+          loadProducts(); // Recargar stock actualizado
+        } else {
+          showToast(res.status, `
+            <strong style="color: #ef4444;">Error en la Orden:</strong> ${data.error || data.message || 'Petición fallida'}<br>
+            ${data.sidecarNotice ? `<em>${data.sidecarNotice}</em>` : ''}
+          `);
+        }
+      } catch (err) {
+        showToast(500, `<span style="color: #ef4444;">Error de red al procesar orden</span>`);
+      }
+    }
+
+    function addOrderToHistory(order) {
+      const existingPlaceholder = ordersList.querySelector('div');
+      if (existingPlaceholder && existingPlaceholder.textContent.includes('No has realizado')) {
+        ordersList.innerHTML = '';
+      }
+
+      const item = document.createElement('div');
+      item.className = 'order-item';
+      item.innerHTML = `
+        <div>
+          <span class="order-id">${order.id}</span> — 
+          <strong>${order.productName}</strong> (x${order.quantity})
+        </div>
+        <div>
+          <span style="color: var(--accent-green); font-weight: 600;">$${order.total.toFixed(2)}</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 8px;">${new Date(order.createdAt).toLocaleTimeString()}</span>
+        </div>
+      `;
+      ordersList.prepend(item);
+    }
+
+    let toastTimeout;
+    function showToast(status, htmlMsg) {
+      toastStatus.textContent = `HTTP ${status}`;
+      toastStatus.style.color = status < 400 ? 'var(--accent-green)' : '#ef4444';
+      toastContent.innerHTML = htmlMsg;
+      
+      sidecarToast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        sidecarToast.classList.remove('show');
+      }, 4500);
+    }
+
+    // Inicializar
+    loadProducts();
+  </script>
+</body>
+</html>
