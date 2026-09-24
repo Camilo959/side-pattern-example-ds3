@@ -70,6 +70,8 @@ function checkMainAppHealth() {
     res.on('end', () => {
       if (res.statusCode === 200) {
         sidecarState.metrics.mainAppStatus = 'HEALTHY';
+      } else if (res.statusCode === 503) {
+        sidecarState.metrics.mainAppStatus = 'DOWN';
       } else {
         sidecarState.metrics.mainAppStatus = 'DEGRADED';
       }
