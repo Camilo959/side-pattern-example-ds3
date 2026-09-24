@@ -115,6 +115,11 @@ Es la capa de negocio del sistema. Aquí se implementa la lógica real del negoc
 - `POST /api/orders`: crea una orden y descuenta stock
 - `GET /health`: responde el estado de salud del servicio
 
+#### Funcionalidades de demo
+
+- `POST /api/crash`: simula la caída del servicio (responde HTTP 503 en todas las rutas)
+- `POST /api/recover`: restaura el servicio a la normalidad sin reiniciar el proceso
+
 #### Datos internos
 
 Mantiene en memoria dos colecciones:
@@ -211,6 +216,24 @@ Retorna el estado del servicio principal con:
 - uptime
 - uso de memoria
 
+> Nota: durante la **simulación de caída**, esta ruta devuelve HTTP 503, lo que el Sidecar interpreta como estado `DOWN`.
+
+#### `POST /api/crash`
+
+Simula la caída del Main Service (Efecto WOW):
+
+- establece el estado interno `serviceCrashed = true`
+- todas las rutas (incluido `/health`) responden **HTTP 503** con un mensaje controlado
+- el proceso sigue vivo, así que la simulación es 100% recuperable y no se pierden los datos en memoria
+
+#### `POST /api/recover`
+
+Restaura el servicio principal al instante:
+
+- desactiva `serviceCrashed`
+- las rutas vuelven a responder normalmente y el `/health` regresa a 200
+- el Sidecar detecta el cambio en el siguiente health check y pasa de `DOWN` a `HEALTHY` en tiempo real
+
 ### 6.2. Sidecar
 
 #### `GET /sidecar/status`
@@ -303,7 +326,11 @@ Estas métricas se envían al frontend a través de SSE.
 
 Cada 5 segundos, el Sidecar hace un `http.get` a `localhost:3000/health` para verificar si la aplicación principal está viva.
 
-Si la app está arriba, marca el estado como `HEALTHY`; si falla, lo marca como `DOWN` o `DEGRADED`.
+La clasificación del estado es:
+
+- `HEALTHY`: respuesta HTTP 200
+- `DOWN`: respuesta HTTP 503 (servicio declarado no disponible, p. ej. durante la simulación de caída) o error de conexión
+- `DEGRADED`: cualquier otro código de estado
 
 ---
 
@@ -377,6 +404,8 @@ La UI del proyecto se encarga de:
 - Crear orden vía Sidecar
 - Llamada directa a la app principal
 - Ráfaga de tráfico
+- Simular caída del Main Service (Efecto WOW)
+- Recuperar el Main Service
 - Limpiar logs
 - Toggles para:
   - tracing

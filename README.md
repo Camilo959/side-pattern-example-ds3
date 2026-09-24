@@ -43,6 +43,23 @@ En la arquitectura de microservicios, el **Sidecar Pattern** consiste en despleg
 
 ---
 
+## 💥 Efecto WOW: Simular la Caída del Main Service
+
+La demo incluye un mecanismo para **simular la caída de la aplicación principal sin matar el proceso** (100% recuperable):
+
+- **`POST /api/crash`** → pone al Main Service en estado `DOWN` (responde **HTTP 503** en todas sus rutas, incluido `/health`).
+- **`POST /api/recover`** → restaura el servicio al instante, sin reiniciar nada ni perder datos.
+
+### Flujo de demostración
+1. Haz clic en **"💥 Simular Caída del Main Service"** en el dashboard.
+2. Observa cómo el **Health Check del Sidecar cambia a `DOWN` en tiempo real** vía SSE, mientras el Sidecar sigue vivo respondiendo.
+3. Ejecuta una petición: el Sidecar responde con un mensaje controlado (**HTTP 503**) e inyectando `X-Trace-ID` y headers de seguridad, en lugar de romper la conexión o colgar el navegador.
+4. Haz clic en **"🔋 Recuperar Main Service"** → el servicio vuelve a `HEALTHY` automáticamente.
+
+> **Argumento técnico para el profe:** *"Aunque la lógica de negocio colapsó, el Sidecar sigue respondiendo, registrando la latencia y notificando al sistema de monitoreo. La app principal no tiene que saber defenderse a sí misma."*
+
+---
+
 ## 🚀 Instrucciones para Ejecutar
 
 ### 1. Instalar dependencias
@@ -71,6 +88,8 @@ Abre la siguiente URL en tu navegador:
    - Haz clic en **"Ráfaga de Tráfico"**. El Sidecar bloqueará las peticiones adicionales con código HTTP 429 cuando superen el límite permitido, protegiendo a la App Principal de sobrecargas.
 4. **Interruptores en Vivo**:
    - Activa/Desactiva en tiempo real la inyección de Trace ID o el Rate Limiter desde el panel y realiza nuevas peticiones.
+5. **Simulación de Caída (Efecto WOW)**:
+   - Haz clic en **"💥 Simular Caída del Main Service"**. El dashboard muestra el estado `DOWN` en vivo y las peticiones devuelven **HTTP 503** controlado con headers del Sidecar. Luego pulsa **"🔋 Recuperar Main Service"** y observa cómo vuelve a `HEALTHY`.
 
 ---
 
