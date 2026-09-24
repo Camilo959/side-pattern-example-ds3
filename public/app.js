@@ -7,6 +7,8 @@ const btnCreateOrder = document.getElementById('btnCreateOrder');
 const btnDirectMain = document.getElementById('btnDirectMain');
 const btnBurstTraffic = document.getElementById('btnBurstTraffic');
 const btnClearLogs = document.getElementById('btnClearLogs');
+const btnCrashMain = document.getElementById('btnCrashMain');
+const btnRecoverMain = document.getElementById('btnRecoverMain');
 
 const toggleTracing = document.getElementById('toggleTracing');
 const toggleRateLimit = document.getElementById('toggleRateLimit');
@@ -17,6 +19,7 @@ const mSuccess = document.getElementById('mSuccess');
 const mRateLimited = document.getElementById('mRateLimited');
 const mAvgLatency = document.getElementById('mAvgLatency');
 const mainHealthStatus = document.getElementById('mainHealthStatus');
+const appStatus = document.getElementById('appStatus');
 
 const logsContainer = document.getElementById('logsContainer');
 const responseHeadersContainer = document.getElementById('responseHeadersContainer');
@@ -78,6 +81,9 @@ function updateMetricsUI(metrics) {
   if (metrics.mainStatus === 'HEALTHY') {
     mainHealthStatus.className = 'badge badge-success';
     mainHealthStatus.textContent = 'HEALTHY (100%)';
+  } else if (metrics.mainStatus === 'DOWN') {
+    mainHealthStatus.className = 'badge badge-danger';
+    mainHealthStatus.textContent = 'DOWN 😵';
   } else {
     mainHealthStatus.className = 'badge badge-danger';
     mainHealthStatus.textContent = metrics.mainStatus;
@@ -215,6 +221,47 @@ btnBurstTraffic.addEventListener('click', async () => {
 toggleTracing.addEventListener('change', updateSidecarConfig);
 toggleRateLimit.addEventListener('change', updateSidecarConfig);
 toggleSecurity.addEventListener('change', updateSidecarConfig);
+
+// ==========================================
+// SIMULACIÓN DE CAÍDA DEL MAIN SERVICE (EFECTO WOW)
+// ==========================================
+function appendLocalLog(message, entryClass = 'system-log') {
+  const div = document.createElement('div');
+  const timeStr = new Date().toLocaleTimeString();
+  div.className = `log-entry ${entryClass}`;
+  div.innerHTML = `<span class="time">[${timeStr}]</span> <span class="msg">${message}</span>`;
+  logsContainer.appendChild(div);
+  logsContainer.scrollTop = logsContainer.scrollHeight;
+}
+
+async function triggerMainCrash(recovered) {
+  try {
+    const endpoint = recovered ? '/api/recover' : '/api/crash';
+    const res = await fetch(`${MAIN_APP_URL}${endpoint}`, { method: 'POST' });
+    const data = await res.json();
+
+    if (recovered) {
+      appStatus.className = 'status-badge pulse-green';
+      appStatus.innerHTML = '<span class="dot"></span> Sidecar & Main App Activos';
+      appendLocalLog(`🔋 ${data.message || 'Main Service recuperado'}`, 'proxied');
+    } else {
+      appStatus.className = 'status-badge';
+      appStatus.style.background = 'rgba(255, 82, 82, 0.1)';
+      appStatus.style.border = '1px solid rgba(255, 82, 82, 0.25)';
+      appStatus.style.color = 'var(--accent-red)';
+      appStatus.innerHTML = '<span class="dot" style="background: var(--accent-red); box-shadow: 0 0 10px var(--accent-red);"></span> Main Service CAÍDO 😵';
+      appendLocalLog(`💥 ${data.message || 'Main Service caído'}`, 'blocked');
+    }
+
+    renderResponseUI(res.status, [], data, true);
+  } catch (e) {
+    console.error('Error simulando caída/recuperación', e);
+    renderResponseUI(500, [], { error: e.message }, true);
+  }
+}
+
+btnCrashMain.addEventListener('click', () => triggerMainCrash(false));
+btnRecoverMain.addEventListener('click', () => triggerMainCrash(true));
 
 btnClearLogs.addEventListener('click', () => {
   logsContainer.innerHTML = '';

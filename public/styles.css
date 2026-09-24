@@ -341,6 +341,26 @@ body {
   border-color: rgba(255, 82, 82, 0.3);
 }
 
+.btn-crash {
+  background: rgba(255, 82, 82, 0.2);
+  color: var(--accent-red);
+  border-color: rgba(255, 82, 82, 0.45);
+}
+
+.btn-crash:hover {
+  background: rgba(255, 82, 82, 0.3);
+}
+
+.btn-recover {
+  background: rgba(0, 230, 118, 0.15);
+  color: var(--accent-green);
+  border-color: rgba(0, 230, 118, 0.35);
+}
+
+.btn-recover:hover {
+  background: rgba(0, 230, 118, 0.25);
+}
+
 /* Toggles */
 .sidecar-toggles h3 {
   font-size: 0.85rem;
