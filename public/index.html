@@ -11,24 +11,24 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app-container">
-    <header class="navbar">
-      <div class="brand">
-        <div class="brand-icon" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        </div>
-        <div>
-          <h1>Sidecar</h1>
-        </div>
+  <header class="navbar">
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       </div>
-      <div class="nav-actions">
-        <span class="status-badge" id="appStatus">
-          <span class="dot" aria-hidden="true"></span><span>En línea</span>
-        </span>
-        <a class="nav-cta" href="/simple.html">Abrir tienda</a>
+      <div>
+        <h1>Sidecar</h1>
       </div>
-    </header>
+    </div>
+    <div class="nav-actions">
+      <span class="status-badge" id="appStatus">
+        <span class="dot" aria-hidden="true"></span><span>En línea</span>
+      </span>
+      <a class="nav-cta" href="/simple.html">Abrir tienda</a>
+    </div>
+  </header>
 
+  <div class="app-container">
     <div class="page-title">
       <div class="eyebrow">Sidecar Pattern · Demo local</div>
       <h2>Observa cada petición antes de que llegue a tu app</h2>
@@ -81,7 +81,7 @@
 
     <main class="grid-layout">
       <section class="card controls-card" aria-label="Consola de pruebas">
-        <div class="card-header"><h2>Probar</h2></div>
+        <div class="card-header"><h2>Consola de Pruebas &amp; Disparador</h2></div>
         <div class="action-buttons">
           <button class="btn btn-primary" id="btnGetProducts">Obtener productos</button>
           <button class="btn btn-secondary" id="btnCreateOrder">Crear orden</button>
