@@ -33,6 +33,7 @@ const packet2 = document.getElementById('packet2');
 // ANIMACIÓN VISUAL DE PAQUETES DE DATOS
 // ==========================================
 function triggerPacketAnimation(isDirectToMain = false) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   packet1.classList.remove('packet-active');
   packet2.classList.remove('packet-active');
 
@@ -241,15 +242,12 @@ async function triggerMainCrash(recovered) {
     const data = await res.json();
 
     if (recovered) {
-      appStatus.className = 'status-badge pulse-green';
-      appStatus.innerHTML = '<span class="dot"></span> Sidecar & Main App Activos';
+      appStatus.classList.remove('is-down');
+      appStatus.innerHTML = '<span class="dot"></span><span>En línea</span>';
       appendLocalLog(`🔋 ${data.message || 'Main Service recuperado'}`, 'proxied');
     } else {
-      appStatus.className = 'status-badge';
-      appStatus.style.background = 'rgba(255, 82, 82, 0.1)';
-      appStatus.style.border = '1px solid rgba(255, 82, 82, 0.25)';
-      appStatus.style.color = 'var(--accent-red)';
-      appStatus.innerHTML = '<span class="dot" style="background: var(--accent-red); box-shadow: 0 0 10px var(--accent-red);"></span> Main Service CAÍDO 😵';
+      appStatus.classList.add('is-down');
+      appStatus.innerHTML = '<span class="dot" aria-hidden="true"></span><span>App caída</span>';
       appendLocalLog(`💥 ${data.message || 'Main Service caído'}`, 'blocked');
     }
 
