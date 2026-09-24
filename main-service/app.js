@@ -17,9 +17,48 @@ const products = [
 
 const orders = [];
 
+// Estado de simulación de caída del servicio (para demo Efecto WOW)
+let serviceCrashed = false;
+
+// ==========================================
+// MIDDLEWARE: SIMULACIÓN DE CAÍDA DEL SERVICIO
+// ==========================================
+
+// Si el servicio está "caído", todas las peticiones (incluido /health)
+// devuelven 503, salvo los endpoints de control /api/crash y /api/recover.
+app.use((req, res, next) => {
+  if (!serviceCrashed) return next();
+  if (req.path === '/api/crash' || req.path === '/api/recover') return next();
+
+  return res.status(503).json({
+    status: 'DOWN',
+    service: 'Main-Service',
+    message: 'Main Service CAÍDO (simulación de caída activa)',
+    sidecarNotice: 'El Sidecar sigue vivo y notificando este estado al sistema de monitoreo.'
+  });
+});
+
 // ==========================================
 // RUTAS DE NEGOCIO (MAIN APPLICATION LOGIC)
 // ==========================================
+
+// 0. Endpoints de control para la demo (Efecto WOW)
+app.post('/api/crash', (req, res) => {
+  serviceCrashed = true;
+  res.status(200).json({
+    success: true,
+    message: '💥 Main Service DERRUMBADO (simulación de caída activada)',
+    note: 'El Sidecar detectará el estado DOWN en tiempo real vía SSE.'
+  });
+});
+
+app.post('/api/recover', (req, res) => {
+  serviceCrashed = false;
+  res.status(200).json({
+    success: true,
+    message: '🔋 Main Service RECUPERADO (simulación de caída desactivada)'
+  });
+});
 
 // 1. Obtener catálogo de productos
 app.get('/api/products', (req, res) => {
