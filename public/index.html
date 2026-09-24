@@ -35,51 +35,51 @@
       <p>Proxy, trazabilidad y límites en un mismo pod. Diseñado para depurar microservicios en tiempo real.</p>
     </div>
 
-    <main class="grid-layout">
-      <section class="card diagram-card" aria-label="Arquitectura">
-        <div class="card-header">
-          <h2>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/></svg>
-            Arquitectura
-          </h2>
-          <span class="tag">Mismo host</span>
+    <section class="card diagram-card" aria-label="Arquitectura">
+      <div class="card-header">
+        <h2>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/></svg>
+          Arquitectura
+        </h2>
+        <span class="tag">Mismo host</span>
+      </div>
+      <div class="topology-container">
+        <div class="node node-client" id="nodeClient">
+          <div class="node-title">Cliente</div>
+          <div class="node-subtitle">Web / API</div>
         </div>
-        <div class="topology-container">
-          <div class="node node-client" id="nodeClient">
-            <div class="node-title">Cliente</div>
-            <div class="node-subtitle">Web / API</div>
-          </div>
-          <div class="arrow-container" id="arrowClientSidecar" aria-hidden="true">
-            <div class="arrow-line"></div>
-            <div class="data-packet" id="packet1"></div>
-            <span class="arrow-label">:3001 proxy</span>
-          </div>
-          <div class="pod-boundary">
-            <div class="pod-header">Pod local — sidecar junto a la app</div>
-            <div class="pod-services">
-              <div class="node node-sidecar" id="nodeSidecar">
-                <div class="node-badge">Sidecar</div>
-                <div class="node-title">Proxy</div>
-                <div class="node-subtitle">:3001</div>
-                <div class="node-features"><span>Trace ID</span><span>Límite</span><span>Métricas</span></div>
-              </div>
-              <div class="arrow-container inner-arrow" id="arrowSidecarMain" aria-hidden="true">
-                <div class="arrow-line"></div>
-                <div class="data-packet" id="packet2"></div>
-                <span class="arrow-label">:3000 loopback</span>
-              </div>
-              <div class="node node-main" id="nodeMain">
-                <div class="node-badge main-badge">App</div>
-                <div class="node-title">Negocio</div>
-                <div class="node-subtitle">:3000</div>
-                <div class="node-features"><span>Órdenes</span><span>Stock</span></div>
-              </div>
+        <div class="arrow-container" id="arrowClientSidecar" aria-hidden="true">
+          <div class="arrow-line"></div>
+          <div class="data-packet" id="packet1"></div>
+          <span class="arrow-label">:3001 proxy</span>
+        </div>
+        <div class="pod-boundary">
+          <div class="pod-header">Pod local — sidecar junto a la app</div>
+          <div class="pod-services">
+            <div class="node node-sidecar" id="nodeSidecar">
+              <div class="node-badge">Sidecar</div>
+              <div class="node-title">Proxy</div>
+              <div class="node-subtitle">:3001</div>
+              <div class="node-features"><span>Trace ID</span><span>Límite</span><span>Métricas</span></div>
+            </div>
+            <div class="arrow-container inner-arrow" id="arrowSidecarMain" aria-hidden="true">
+              <div class="arrow-line"></div>
+              <div class="data-packet" id="packet2"></div>
+              <span class="arrow-label">:3000 loopback</span>
+            </div>
+            <div class="node node-main" id="nodeMain">
+              <div class="node-badge main-badge">App</div>
+              <div class="node-title">Negocio</div>
+              <div class="node-subtitle">:3000</div>
+              <div class="node-features"><span>Órdenes</span><span>Stock</span></div>
             </div>
           </div>
         </div>
-        <p class="section-footnote">El sidecar intercepta cada petición, inyecta trazabilidad y aplica políticas sin tocar la app.</p>
-      </section>
+      </div>
+      <p class="section-footnote">El sidecar intercepta cada petición, inyecta trazabilidad y aplica políticas sin tocar la app.</p>
+    </section>
 
+    <main class="grid-layout">
       <section class="card controls-card" aria-label="Consola de pruebas">
         <div class="card-header"><h2>Probar</h2></div>
         <div class="action-buttons">

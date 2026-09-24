@@ -69,6 +69,7 @@ body {
   min-height: 100vh;
   padding: 0 0 56px;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
 
 /* Glow superior sutil, como el hero de Linear */
@@ -154,12 +155,24 @@ body::before {
 }
 .section-footnote { font-size: 13px; color: var(--text-2); padding: 10px 16px 14px; border-top: 1px solid var(--border); }
 
-/* ---------- Topología: elemento firma ---------- */
-.diagram-card { grid-column: span 2; }
-.topology-container { display: flex; align-items: stretch; gap: 10px; padding: 16px; }
+/* ---------- Topología: banda full-bleed a pantalla completa ---------- */
+.diagram-card {
+  margin: 8px calc(50% - 50vw) 24px;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+.diagram-card .card-header,
+.diagram-card .topology-container,
+.diagram-card .section-footnote {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.topology-container { display: flex; align-items: stretch; gap: 12px; padding: 24px; }
 .node {
   background: var(--panel-2); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 12px 14px; min-width: 0; flex: 1;
+  padding: 16px; min-width: 0; flex: 1;
 }
 .node-badge {
   display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
@@ -307,7 +320,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 @media (max-width: 900px) {
   .grid-layout { grid-template-columns: 1fr; }
-  .diagram-card, .logs-card, .response-card { grid-column: span 1; }
+  .logs-card, .response-card { grid-column: span 1; }
   .topology-container { flex-direction: column; }
   .pod-services { flex-direction: column; }
   .arrow-container { width: 100%; min-height: 40px; }
